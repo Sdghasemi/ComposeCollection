@@ -1,27 +1,52 @@
 package com.hirno.compose.collection
 
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.WindowCompat
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
-import android.view.Menu
-import android.view.MenuItem
 import androidx.activity.compose.setContent
-import com.hirno.compose.collection.databinding.ActivityMainBinding
-import com.hirno.compose.collection.ui.MainActivityScreen
+import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Modifier
+import androidx.lifecycle.ViewModelProvider
+import com.hirno.compose.collection.model.collection.CollectionResponseModel
+import com.hirno.compose.collection.ui.AppUiState
+import com.hirno.compose.collection.ui.AppUiStateModel
+import com.hirno.compose.collection.ui.MainFragmentScreen
+import com.hirno.compose.collection.ui.main.MainViewModel
+import com.hirno.compose.collection.ui.main.MainViewModelFactory
+import com.hirno.compose.collection.ui.theme.AppTheme
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var viewModel: MainViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
+//        setContentView(R.layout.activity_main)
+//        if (savedInstanceState == null) {
+//            supportFragmentManager.beginTransaction()
+//                .replace(R.id.container, MainFragment.newInstance())
+//                .commitNow()
+//        }
+
+        val viewModelFactory = MainViewModelFactory((applicationContext as MainApplication).collectionsRepository)
+        viewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
+        viewModel.loadCollections()
 
         setContent {
-            MainActivityScreen()
+            AppTheme {
+                val collections by viewModel.collections.observeAsState(CollectionResponseModel())
+                val isLoading by viewModel.dataLoading.observeAsState(false)
+                val uiState = when {
+                    isLoading -> AppUiState(AppUiStateModel.Loading)
+                    collections.objects.isNotEmpty() -> AppUiState(AppUiStateModel.Success(collections))
+                    else -> AppUiState(AppUiStateModel.Error)
+                }
+                MainFragmentScreen(
+                    modifier = Modifier.fillMaxSize(),
+                    mainState = uiState,
+                )
+            }
         }
     }
 }
