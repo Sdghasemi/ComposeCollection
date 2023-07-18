@@ -9,9 +9,9 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModelProvider
 import com.hirno.compose.collection.model.collection.CollectionResponseModel
-import com.hirno.compose.collection.ui.AppUiState
-import com.hirno.compose.collection.ui.AppUiStateModel
-import com.hirno.compose.collection.ui.MainFragmentScreen
+import com.hirno.compose.collection.model.ui.AppUiState
+import com.hirno.compose.collection.model.ui.AppUiStateModel
+import com.hirno.compose.collection.ui.MainScreen
 import com.hirno.compose.collection.ui.main.MainViewModel
 import com.hirno.compose.collection.ui.main.MainViewModelFactory
 import com.hirno.compose.collection.ui.theme.AppTheme
@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
                     collections.objects.isNotEmpty() -> AppUiState(AppUiStateModel.Success(collections))
                     else -> AppUiState(AppUiStateModel.Error)
                 }
-                MainFragmentScreen(
+                MainScreen(
                     modifier = Modifier.fillMaxSize(),
                     mainState = uiState,
                 )

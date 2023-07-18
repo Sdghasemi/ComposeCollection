@@ -14,7 +14,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class CollectionResponseModel @JvmOverloads constructor(
     @SerializedName("artObjects")
-    var objects: ArrayList<CollectionItemModel> = arrayListOf(),
+    val objects: ArrayList<CollectionItemModel> = arrayListOf(),
 ) : Parcelable
 
 /**
@@ -26,16 +26,16 @@ data class CollectionItemModel @JvmOverloads constructor(
     @PrimaryKey
     @ColumnInfo(name = "id")
     @SerializedName("id")
-    var id: String = "",
+    val id: String = "",
     @ColumnInfo(name = "objectNumber")
     @SerializedName("objectNumber")
-    var objectNumber: String = "",
+    val objectNumber: String = "",
     @ColumnInfo(name = "title")
     @SerializedName("title")
-    var title: String? = null,
+    val title: String? = null,
     @Embedded(prefix = "webImage_")
     @SerializedName("webImage")
-    var webImage: WebImage = WebImage(),
+    val webImage: WebImage = WebImage(),
 ) : Parcelable {
     /**
      * Model of webImage property inside [CollectionItemModel]
@@ -44,13 +44,13 @@ data class CollectionItemModel @JvmOverloads constructor(
     data class WebImage(
         @ColumnInfo(name = "width")
         @SerializedName("width")
-        var width: Int = 0,
+        val width: Int = 0,
         @ColumnInfo(name = "height")
         @SerializedName("height")
-        var height: Int = 0,
+        val height: Int = 0,
         @ColumnInfo(name = "url")
         @SerializedName("url")
-        var url: String? = null,
+        val url: String? = null,
     ) : Parcelable {
         /**
          * Returns a string ratio of the collection image

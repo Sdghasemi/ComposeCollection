@@ -1,57 +1,42 @@
 package com.hirno.compose.collection.ui
 
 import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Drawable
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Stable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.hirno.compose.collection.R
 import com.hirno.compose.collection.model.collection.CollectionItemModel
 import com.hirno.compose.collection.model.collection.CollectionResponseModel
+import com.hirno.compose.collection.model.ui.AppUiState
+import com.hirno.compose.collection.model.ui.AppUiStateModel
 import com.hirno.compose.collection.ui.theme.AppTheme
 
-@Stable
-class AppUiState(
-    uiState: AppUiStateModel = AppUiStateModel.Loading
-) {
-    val uiState by mutableStateOf(uiState)
-}
-
-sealed class AppUiStateModel {
-    object Loading : AppUiStateModel()
-    object Error : AppUiStateModel()
-    class Success(
-        val model: CollectionResponseModel
-    ) : AppUiStateModel()
-}
-
-@OptIn(ExperimentalFoundationApi::class, ExperimentalGlideComposeApi::class)
 @Composable
-fun MainFragmentScreen(
+fun MainScreen(
     modifier: Modifier = Modifier,
     mainState: AppUiState = AppUiState()
 ) {
@@ -63,19 +48,34 @@ fun MainFragmentScreen(
                 modifier = Modifier.align(Alignment.Center)
             )
             is AppUiStateModel.Error -> Text(text = stringResource(id = R.string.failed_to_connect_to_remote_server))
-            is AppUiStateModel.Success -> {
-                LazyVerticalStaggeredGrid(columns = StaggeredGridCells.Fixed(3)) {
-                    items(state.model.objects) { item ->
-                        MainItem(
-                            item = item,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                    }
-                }
-            }
+            is AppUiStateModel.Success -> MainList(
+                model = state.model,
+                modifier = Modifier.fillMaxSize()
+            )
         }
     }
 }
+
+@Composable
+@OptIn(ExperimentalFoundationApi::class)
+private fun MainList(
+    model: CollectionResponseModel,
+    modifier: Modifier = Modifier,
+) {
+    LazyVerticalStaggeredGrid(
+        columns = StaggeredGridCells.Fixed(2),
+        modifier = modifier,
+        contentPadding = PaddingValues(all = 6.dp),
+    ) {
+        items(model.objects) { item ->
+            MainItem(
+                item = item,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+    }
+}
+
 
 @Composable
 @OptIn(ExperimentalGlideComposeApi::class)
@@ -83,49 +83,51 @@ private fun MainItem(
     item: CollectionItemModel,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier = modifier,
+    Surface(
+        modifier = modifier.padding(all = 6.dp),
     ) {
-        val placeholder = rememberPlaceholder()
-        val ratio = rememberRatio(item.webImage)
-        GlideImage(
-            model = item.webImage.url,
-            contentDescription = item.title,
-            modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(ratio),
-        ) {
-            it
-                .placeholder(placeholder)
-                .transition(DrawableTransitionOptions.withCrossFade())
+        Column {
+            val image = item.webImage
+            val ratio = rememberImageRatio(image)
+            val placeholderDrawable = rememberPlaceholder()
+            GlideImage(
+                model = image.url,
+                contentDescription = item.title,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(ratio),
+            ) {
+                it
+                    .placeholder(placeholderDrawable)
+            }
+            Text(
+                text = item.title ?: "",
+                modifier = Modifier.fillMaxWidth(),
+            )
         }
-        Text(
-            text = item.title ?: "",
-            style = TextStyle(color = MaterialTheme.colorScheme.primary),
-            modifier = Modifier.fillMaxWidth(),
-        )
     }
 }
 
 @Composable
-fun rememberPlaceholder(
-    color: Color = MaterialTheme.colorScheme.secondary
-): Drawable {
-    return ColorDrawable(color.toArgb())
+private fun rememberImageRatio(image: CollectionItemModel.WebImage) = remember(image) {
+    image.width.toFloat() / image.height
 }
 
 @Composable
-fun rememberRatio(
-    image: CollectionItemModel.WebImage
-) = image.width.toFloat() / image.height
+private fun rememberPlaceholder(
+    placeholderColor: Color = MaterialTheme.colorScheme.surfaceVariant
+) = remember(placeholderColor) {
+    ColorDrawable(placeholderColor.toArgb())
+}
 
 @Preview(device = Devices.NEXUS_6)
 @Composable
-fun MainFragmentPreview() {
+fun MainPreview() {
     AppTheme {
-        MainFragmentScreen(
+        MainScreen(
             modifier = Modifier.fillMaxSize(),
-            mainState = AppUiState(AppUiStateModel.Success(
+            mainState = AppUiState(
+                AppUiStateModel.Success(
                 CollectionResponseModel(
                 objects = arrayListOf(
                     CollectionItemModel(
