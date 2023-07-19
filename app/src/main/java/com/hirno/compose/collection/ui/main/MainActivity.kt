@@ -1,4 +1,4 @@
-package com.hirno.compose.collection
+package com.hirno.compose.collection.ui.main
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -8,12 +8,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModelProvider
+import com.hirno.compose.collection.MainApplication
 import com.hirno.compose.collection.model.collection.CollectionResponseModel
 import com.hirno.compose.collection.model.ui.AppUiState
 import com.hirno.compose.collection.model.ui.AppUiStateModel
 import com.hirno.compose.collection.ui.MainScreen
-import com.hirno.compose.collection.ui.main.MainViewModel
-import com.hirno.compose.collection.ui.main.MainViewModelFactory
 import com.hirno.compose.collection.ui.theme.AppTheme
 
 class MainActivity : AppCompatActivity() {
@@ -22,12 +21,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        setContentView(R.layout.activity_main)
-//        if (savedInstanceState == null) {
-//            supportFragmentManager.beginTransaction()
-//                .replace(R.id.container, MainFragment.newInstance())
-//                .commitNow()
-//        }
 
         val viewModelFactory = MainViewModelFactory((applicationContext as MainApplication).collectionsRepository)
         viewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]

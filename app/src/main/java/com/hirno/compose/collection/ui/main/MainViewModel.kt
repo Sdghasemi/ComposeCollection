@@ -10,7 +10,7 @@ import com.hirno.compose.collection.network.response.NetworkResponse
 import kotlinx.coroutines.launch
 
 /**
- * The [MainFragment] view model. Stores and manipulates state of the fragment
+ * The [MainActivity] view model. Stores and manipulates state of the fragment
  *
  * @property collectionsRepository The repository instance used to manage collections
  */

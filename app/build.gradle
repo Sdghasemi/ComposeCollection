@@ -5,15 +5,6 @@ plugins {
     id "kotlin-parcelize"
 }
 
-//androidComponents {
-//    onVariants {
-//        it.buildConfigFields.put(
-//                "API_KEY", BuildConfigField(
-//                "String", "\"yW6uq3BV\"")
-//        )
-//    }
-//}
-
 android {
     namespace 'com.hirno.compose.collection'
     compileSdk 34
@@ -115,7 +106,6 @@ dependencies {
     implementation 'androidx.compose.runtime:runtime-livedata'
 
     // Image loading
-    implementation "io.coil-kt:coil-compose:2.4.0"
     implementation "com.github.bumptech.glide:compose:1.0.0-alpha.1"
 
     testImplementation 'junit:junit:4.13.2'
