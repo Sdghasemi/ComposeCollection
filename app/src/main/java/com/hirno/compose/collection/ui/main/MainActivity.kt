@@ -1,8 +1,8 @@
 package com.hirno.compose.collection.ui.main
 
 import android.os.Bundle
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -15,7 +15,7 @@ import com.hirno.compose.collection.model.ui.AppUiStateModel
 import com.hirno.compose.collection.ui.MainScreen
 import com.hirno.compose.collection.ui.theme.AppTheme
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : ComponentActivity() {
 
     private lateinit var viewModel: MainViewModel
 
