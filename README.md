@@ -20,6 +20,9 @@ The images displayed as thumbnails are also cached for better experience.
 ## API
 Using [Rijksmuseum API](https://data.rijksmuseum.nl/object-metadata/api/) the art collections are retrieved and displayed in an [Vertical Staggered Grid](https://developer.android.com/reference/kotlin/androidx/compose/foundation/lazy/staggeredgrid/package-summary#LazyVerticalStaggeredGrid(androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells,androidx.compose.ui.Modifier,androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState,androidx.compose.foundation.layout.PaddingValues,kotlin.Boolean,androidx.compose.ui.unit.Dp,androidx.compose.foundation.layout.Arrangement.Horizontal,androidx.compose.foundation.gestures.FlingBehavior,kotlin.Boolean,kotlin.Function1)).
 
+## APK
+A [pre-built APK](app-debug.apk) is placed in the root of the project for your convenience.
+
 ### Contact developer
 
 If there's ***anything*** you'd like to discuss, feel free to contact me at [Sd.ghasemi1@gmail.com](mailto:Sd.ghasemi1@gmail.com).
