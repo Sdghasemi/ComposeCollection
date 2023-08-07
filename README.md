@@ -1,4 +1,4 @@
-# ComposeCollection
+# Compose Collection
 A sample Android application using Retrofit and Jetpack Compose to display lists of images
 
 ## Design patterns:
